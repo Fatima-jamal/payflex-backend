@@ -1,42 +1,28 @@
 package com.payflex.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.payflex.model.PaymentRequest;
 import com.payflex.service.PaymentRequestService;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/payment-requests")
 public class PaymentRequestController {
-    private final PaymentRequestService service;
 
-    public PaymentRequestController(PaymentRequestService service) {
-        this.service = service;
+    @Autowired
+    private PaymentRequestService paymentRequestService;
+
+    @PostMapping
+    public void createPaymentRequest(@RequestBody PaymentRequest paymentRequest) {
+        paymentRequestService.savePaymentRequest(paymentRequest);
     }
 
     @GetMapping
-    public List<PaymentRequest> getAll() {
-        return service.getAll();
-    }
-
-    @PostMapping
-    public PaymentRequest create(@RequestBody PaymentRequest request) {
-        return service.create(request);
-    }
-
-    @GetMapping("/{id}")
-    public PaymentRequest getById(@PathVariable Long id) {
-        return service.getById(id);
-    }
-
-    @PutMapping("/{id}")
-    public PaymentRequest update(@PathVariable Long id, @RequestBody PaymentRequest request) {
-        return service.update(id, request);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    public List<PaymentRequest> getAllPaymentRequests() {
+        return paymentRequestService.getAllRequests();
     }
 }

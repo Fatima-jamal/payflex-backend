@@ -1,5 +1,9 @@
 com\payflex\controller\PaymentRequestController.class
 com\payflex\repository\PaymentRequestRepository.class
-com\payflex\PayFlexApplication.class
+com\payflex\controller\MerchantController.class
+com\payflex\model\RefundRequest.class
 com\payflex\model\PaymentRequest.class
 com\payflex\service\PaymentRequestService.class
+com\payflex\controller\RefundRequestController.class
+com\payflex\PayflexBackendApplication.class
+com\payflex\repository\RefundRequestRepository.class
