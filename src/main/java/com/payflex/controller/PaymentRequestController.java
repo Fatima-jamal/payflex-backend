@@ -5,13 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.payflex.model.PaymentRequest;
 import com.payflex.service.PaymentRequestService;
 import org.springframework.http.ResponseEntity;
-
 import java.util.List;
 
 @CrossOrigin(origins = {
     "http://localhost:5173",
     "https://pos-tattoo-imports-studying.trycloudflare.com",
-    "https://payflex-app.fatima-jamal.com"  // ✅ Netlify domain added for CORS
+    "https://payflex-app.fatima-jamal.com",
+    "https://payflex-frontend.netlify.app" // ✅ Add Netlify if used
 })
 @RestController
 @RequestMapping("/api/payment-requests")
@@ -20,8 +20,8 @@ public class PaymentRequestController {
     @Autowired
     private PaymentRequestService paymentRequestService;
 
-    @PostMapping
-    public ResponseEntity<String> createPaymentRequest(@RequestBody PaymentRequest paymentRequest) {
+    @PostMapping(consumes = "application/json") // ✅ Ensure correct Content-Type
+    public ResponseEntity<PaymentResponse> createPaymentRequest(@RequestBody PaymentRequest paymentRequest) {
         System.out.println("===== Payment Received =====");
         System.out.println("Merchant ID: " + paymentRequest.getMerchantId());
         System.out.println("Customer Name: " + paymentRequest.getCustomerName());
@@ -30,13 +30,30 @@ public class PaymentRequestController {
         System.out.println("Amount: " + paymentRequest.getAmount());
         System.out.println("Description: " + paymentRequest.getDescription());
         System.out.println("=============================");
-        
-        paymentRequestService.savePaymentRequest(paymentRequest);
-        return ResponseEntity.ok("Payment saved successfully");
+
+        PaymentRequest saved = paymentRequestService.savePaymentRequest(paymentRequest);
+        return ResponseEntity.ok(new PaymentResponse(saved.getId()));
     }
 
     @GetMapping
     public List<PaymentRequest> getAllPaymentRequests() {
         return paymentRequestService.getAllRequests();
+    }
+
+    // Simple DTO for returning transactionId
+    public static class PaymentResponse {
+        private Long id;
+
+        public PaymentResponse(Long id) {
+            this.id = id;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
     }
 }

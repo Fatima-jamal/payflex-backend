@@ -13,8 +13,9 @@ public class PaymentRequestService {
     @Autowired
     private PaymentRequestRepository paymentRequestRepository;
 
-    public void savePaymentRequest(PaymentRequest paymentRequest) {
-        paymentRequestRepository.save(paymentRequest);
+    // ✅ Now returns the saved request (with generated ID)
+    public PaymentRequest savePaymentRequest(PaymentRequest paymentRequest) {
+        return paymentRequestRepository.save(paymentRequest);
     }
 
     public List<PaymentRequest> getAllRequests() {
