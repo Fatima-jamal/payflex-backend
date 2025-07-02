@@ -10,7 +10,8 @@ import java.util.List;
 
 @CrossOrigin(origins = {
     "http://localhost:5173",
-    "https://pos-tattoo-imports-studying.trycloudflare.com"
+    "https://pos-tattoo-imports-studying.trycloudflare.com",
+    "https://payflex-app.fatima-jamal.com"  // ✅ Netlify domain added for CORS
 })
 @RestController
 @RequestMapping("/api/payment-requests")
@@ -21,7 +22,15 @@ public class PaymentRequestController {
 
     @PostMapping
     public ResponseEntity<String> createPaymentRequest(@RequestBody PaymentRequest paymentRequest) {
-        System.out.println("Received payment: " + paymentRequest); // Optional debug log
+        System.out.println("===== Payment Received =====");
+        System.out.println("Merchant ID: " + paymentRequest.getMerchantId());
+        System.out.println("Customer Name: " + paymentRequest.getCustomerName());
+        System.out.println("Email: " + paymentRequest.getEmail());
+        System.out.println("Phone: " + paymentRequest.getPhone());
+        System.out.println("Amount: " + paymentRequest.getAmount());
+        System.out.println("Description: " + paymentRequest.getDescription());
+        System.out.println("=============================");
+        
         paymentRequestService.savePaymentRequest(paymentRequest);
         return ResponseEntity.ok("Payment saved successfully");
     }
