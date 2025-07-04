@@ -16,10 +16,10 @@ public class RefundRequest {
     private Long id;
 
     @Column(name = "merchant_id")
-    private String merchantId;
+    private Integer merchantId;
 
     @Column(name = "transaction_id")
-    private String transactionId;
+    private Integer transactionId;
 
     private String reason;
     private double amount;

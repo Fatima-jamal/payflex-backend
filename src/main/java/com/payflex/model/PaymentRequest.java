@@ -11,7 +11,9 @@ public class PaymentRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String merchantId;
+    @Column(name = "merchant_id")
+    private String merchantId; // 🔁 Changed from Integer → String
+
     private String customerName;
     private String email;
     private String phone;
@@ -25,7 +27,7 @@ public class PaymentRequest {
         createdAt = LocalDateTime.now();
     }
 
-    // Getters & Setters
+    // === Getters & Setters ===
 
     public Long getId() {
         return id;

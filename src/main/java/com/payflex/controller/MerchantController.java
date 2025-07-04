@@ -1,41 +1,27 @@
 package com.payflex.controller;
 
-import com.payflex.model.RefundRequest;
-import com.payflex.repository.RefundRequestRepository;
+import com.payflex.model.Merchant;
+import com.payflex.repository.MerchantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5174")  // Allow frontend to call this
 public class MerchantController {
 
     @Autowired
-    private RefundRequestRepository refundRequestRepository;
+    private MerchantRepository merchantRepository;
 
-    @GetMapping("/merchant-dashboard")
-    public ResponseEntity<Map<String, Object>> getMerchantDashboard() {
-        Map<String, Object> dashboardData = new HashMap<>();
-        dashboardData.put("totalTransactions", 1519);
-        dashboardData.put("totalVolume", 25641520.93);
-        dashboardData.put("amountPaid", 924129.26);
-        dashboardData.put("successfulTransactions", 1519);
-        return ResponseEntity.ok(dashboardData);
-    }
-
-    @GetMapping("/ping")
-    public ResponseEntity<String> ping() {
-        return ResponseEntity.ok("Server is up and running!");
-    }
-
-    @PostMapping("/refund-request")
-    public ResponseEntity<String> submitRefundRequest(@RequestBody RefundRequest request) {
-        request.setStatus("Pending");
-        refundRequestRepository.save(request);
-        return ResponseEntity.ok("Refund request submitted successfully.");
+    @GetMapping("/merchants/{mid}")
+    public ResponseEntity<?> getMerchantByMid(@PathVariable String mid) {
+        Merchant merchant = merchantRepository.findByMid(mid);
+        if (merchant != null) {
+            return ResponseEntity.ok(merchant);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Merchant not found");
+        }
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
     "http://localhost:5173",
     "https://pos-tattoo-imports-studying.trycloudflare.com",
     "https://payflex-app.fatima-jamal.com",
-    "https://payflex-frontend.netlify.app" // ✅ Add Netlify if used
+    "https://payflex-frontend.netlify.app"
 })
 @RestController
 @RequestMapping("/api/payment-requests")
@@ -20,7 +20,7 @@ public class PaymentRequestController {
     @Autowired
     private PaymentRequestService paymentRequestService;
 
-    @PostMapping(consumes = "application/json") // ✅ Ensure correct Content-Type
+    @PostMapping(consumes = "application/json")
     public ResponseEntity<PaymentResponse> createPaymentRequest(@RequestBody PaymentRequest paymentRequest) {
         System.out.println("===== Payment Received =====");
         System.out.println("Merchant ID: " + paymentRequest.getMerchantId());
@@ -40,7 +40,6 @@ public class PaymentRequestController {
         return paymentRequestService.getAllRequests();
     }
 
-    // Simple DTO for returning transactionId
     public static class PaymentResponse {
         private Long id;
 
