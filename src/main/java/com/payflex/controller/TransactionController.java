@@ -1,8 +1,9 @@
+// src/main/java/com/payflex/controller/TransactionController.java
 package com.payflex.controller;
 
 import com.payflex.model.Transaction;
 import com.payflex.repository.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,13 +11,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/transactions")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class TransactionController {
 
-    @Autowired
-    private TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
 
-    @GetMapping("/{mid}")
+    @GetMapping("/mid/{mid}")
     public List<Transaction> getTransactionsByMid(@PathVariable String mid) {
-        return transactionRepository.findByMerchantId(mid);  // ✅ Corrected method name
+        return transactionRepository.findByMid(mid);
     }
 }

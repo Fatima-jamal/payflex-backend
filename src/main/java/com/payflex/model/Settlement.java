@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "settlements") // 👈 Important fix
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "settlements")
 public class Settlement {
 
     @Id
@@ -15,7 +15,15 @@ public class Settlement {
     private Long id;
 
     private String mid;
-    private double totalAmount;
-    private String status;
+
+    @Column(name = "settlement_date")
     private String settlementDate;
+
+    @Column(name = "total_amount")
+    private int totalAmount;
+
+    @Column(name = "reference_id")
+    private String referenceId;
+
+    private String status;
 }

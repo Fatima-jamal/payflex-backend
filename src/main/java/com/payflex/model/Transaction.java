@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "transactions") // Must match the actual table name in PostgreSQL
+@Table(name = "transactions")  // Make sure this matches your DB table name
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,11 +17,14 @@ public class Transaction {
     @Column(name = "transaction_id")
     private String transactionId;
 
-    @Column(name = "merchant_id") // This must match column in DB for queries like findByMerchantId()
-    private String merchantId;
+    @Column(name = "tid")
+    private String tid;
 
-    @Column(name = "mid") // If this is used for merchant profile display, keep it
+    @Column(name = "mid")
     private String mid;
+
+    @Column(name = "merchant_id")
+    private String merchantId;
 
     @Column(name = "status")
     private String status;
@@ -32,7 +35,6 @@ public class Transaction {
     @Column(name = "paid_amount")
     private Double paidAmount;
 
-    // Optional: add timestamp if needed for future sorting/filtering
-    // @Column(name = "created_at")
-    // private LocalDateTime createdAt;
+    @Column(name = "created_at")
+    private String createdAt; // Optional: can be LocalDateTime if DB supports timestamp
 }

@@ -3,22 +3,21 @@ package com.payflex.repository;
 import com.payflex.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
-@Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    List<Transaction> findByMerchantId(String merchantId);
+    List<Transaction> findByMid(String mid);
 
-    long countByMerchantId(String merchantId);
+    @Query("SELECT COUNT(t) FROM Transaction t WHERE t.mid = ?1")
+    long countByMid(String mid);
 
-    long countByMerchantIdAndStatus(String merchantId, String status);
+    @Query("SELECT SUM(t.amount) FROM Transaction t WHERE t.mid = ?1")
+    Double sumAmountByMid(String mid);
 
-    @Query("SELECT SUM(t.amount) FROM Transaction t WHERE t.merchantId = :merchantId")
-    Double sumAmountByMerchantId(String merchantId);
+    @Query("SELECT SUM(t.paidAmount) FROM Transaction t WHERE t.mid = ?1")
+    Double sumPaidAmountByMid(String mid);
 
-    @Query("SELECT SUM(t.paidAmount) FROM Transaction t WHERE t.merchantId = :merchantId")
-    Double sumPaidAmountByMerchantId(String merchantId);
+    @Query("SELECT COUNT(t) FROM Transaction t WHERE t.mid = ?1 AND t.status = ?2")
+    long countByMidAndStatus(String mid, String status);
 }

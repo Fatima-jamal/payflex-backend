@@ -7,6 +7,7 @@ com\payflex\service\PaymentRequestService.class
 com\payflex\controller\RefundRequestController.class
 com\payflex\PayflexBackendApplication.class
 com\payflex\controller\AuthController.class
+com\payflex\service\TransactionService.class
 com\payflex\repository\RefundRequestRepository.class
 com\payflex\controller\MerchantController.class
 com\payflex\model\Merchant.class
