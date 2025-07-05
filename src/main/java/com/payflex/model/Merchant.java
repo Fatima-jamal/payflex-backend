@@ -18,15 +18,19 @@ public class Merchant {
     private String mid;
 
     private String name;
+    private String dba;
+    private String email;
+    private String proprietorCnic;
+    private String mobileNumber;
+    private String merchantCategory;
+    private String merchantType;
+    private String cnicExpiry;
+    private String city;
+    private String region;
+    private String businessAddress;
+    private String revenue;
     private String password;
-    private String dbaName;
-    private String website;
-    private String phone;
 
     @Column(name = "is_approved")
     private boolean isApproved;
-
-    // If you prefer explicit getters/setters, replace @Data and use below:
-    // public boolean isApproved() { return isApproved; }
-    // public void setApproved(boolean approved) { isApproved = approved; }
 }

@@ -4,24 +4,22 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "refund_requests")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "refund_requests")
 public class RefundRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private int amount;
+    private String reason;
+
     @Column(name = "merchant_id")
-    private Integer merchantId;
+    private String merchantId;
 
     @Column(name = "transaction_id")
-    private Integer transactionId;
-
-    private String reason;
-    private double amount;
-    private String status;
+    private Long transactionId;
 }

@@ -1,28 +1,23 @@
 package com.payflex.service;
 
-import com.payflex.dto.RefundRequestDTO;
 import com.payflex.model.RefundRequest;
 import com.payflex.repository.RefundRequestRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-@RequiredArgsConstructor
 public class RefundRequestService {
 
-    private final RefundRequestRepository refundRequestRepository;
+    @Autowired
+    private RefundRequestRepository refundRequestRepository;
 
-    public RefundRequest createRefundRequest(RefundRequestDTO dto) {
-        RefundRequest refund = new RefundRequest();
+    public RefundRequest saveRefundRequest(RefundRequest refundRequest) {
+        return refundRequestRepository.save(refundRequest);
+    }
 
-        // Fix: Convert Strings to Integer
-        refund.setMerchantId(Integer.parseInt(dto.getMerchantId()));
-        refund.setTransactionId(Integer.parseInt(dto.getTransactionId()));
-
-        refund.setReason(dto.getReason());
-        refund.setAmount(dto.getAmount());
-        refund.setStatus("PENDING");
-
-        return refundRequestRepository.save(refund);
+    public List<RefundRequest> getRefundsByMerchant(String merchantId) {
+        return refundRequestRepository.findByMerchantId(merchantId);
     }
 }
