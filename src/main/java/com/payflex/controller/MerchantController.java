@@ -121,10 +121,10 @@ public class MerchantController {
     public ResponseEntity<List<Merchant>> getApprovedMerchants() {
         List<Merchant> all = merchantRepository.findByIsApprovedTrueAndIsRejectedFalse();
 
-        // ✅ Filter out incomplete records
+        // ✅ Filter only for essential fields (drop dba from requirement)
         List<Merchant> filtered = all.stream()
                 .filter(m -> m.getName() != null && m.getEmail() != null &&
-                             m.getPassword() != null && m.getDba() != null)
+                             m.getPassword() != null)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(filtered);
