@@ -8,27 +8,34 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/merchants")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+@CrossOrigin(
+    origins = "http://localhost:5175",
+    allowedHeaders = "*",
+    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}
+)
 public class MerchantController {
 
     @Autowired
     private MerchantRepository merchantRepository;
 
-    // Submit new merchant
     @PostMapping("/submit")
     public ResponseEntity<String> submitMerchant(@RequestBody Merchant merchant) {
         merchant.setApproved(false);
+        merchant.setRejected(false);
+        merchant.setRejectionReason(null);
+
         if (merchant.getMid() == null || merchant.getMid().isEmpty()) {
             merchant.setMid(generateMid());
         }
+
         merchantRepository.save(merchant);
         return ResponseEntity.ok("Merchant submitted successfully.");
     }
 
-    // Approve merchant
     @PutMapping("/approve/{mid}")
     public ResponseEntity<String> approveMerchant(@PathVariable String mid) {
         Merchant merchant = merchantRepository.findByMid(mid);
@@ -37,15 +44,17 @@ public class MerchantController {
         }
 
         merchant.setApproved(true);
+        merchant.setRejected(false);
+        merchant.setRejectionReason(null);
+
         if (merchant.getPassword() == null || merchant.getPassword().isEmpty()) {
             merchant.setPassword(generatePassword());
         }
 
         merchantRepository.save(merchant);
-        return ResponseEntity.ok("Merchant approved");
+        return ResponseEntity.ok("Merchant approved.");
     }
 
-    // Reject merchant
     @DeleteMapping("/reject/{mid}")
     public ResponseEntity<String> rejectMerchant(@PathVariable String mid) {
         Merchant merchant = merchantRepository.findByMid(mid);
@@ -53,11 +62,46 @@ public class MerchantController {
             return ResponseEntity.status(404).body("Merchant not found");
         }
 
-        merchantRepository.delete(merchant);
-        return ResponseEntity.ok("Merchant rejected and deleted");
+        merchant.setRejected(true);
+        merchant.setApproved(false);
+        merchant.setRejectionReason("Incomplete or invalid information");
+
+        merchantRepository.save(merchant);
+        return ResponseEntity.ok("Merchant rejected and marked as returned.");
     }
 
-    // Get merchant by MID
+    @PutMapping("/{id}/request-again")
+    public ResponseEntity<String> requestAgain(@PathVariable Long id) {
+        Merchant merchant = merchantRepository.findById(id).orElse(null);
+        if (merchant == null) {
+            return ResponseEntity.status(404).body("Merchant not found");
+        }
+
+        merchant.setRejected(false);
+        merchant.setApproved(false);
+        merchant.setRejectionReason(null);
+
+        merchantRepository.save(merchant);
+        return ResponseEntity.ok("Merchant marked for resubmission.");
+    }
+
+    @PutMapping("/{id}/reason")
+    public ResponseEntity<String> updateReason(@PathVariable Long id, @RequestBody String reason) {
+        Merchant merchant = merchantRepository.findById(id).orElse(null);
+        if (merchant == null) {
+            return ResponseEntity.status(404).body("Merchant not found");
+        }
+
+        merchant.setRejectionReason(reason);
+        merchantRepository.save(merchant);
+        return ResponseEntity.ok("Rejection reason updated.");
+    }
+
+    @GetMapping("/rejected")
+    public ResponseEntity<List<Merchant>> getRejectedMerchants() {
+        return ResponseEntity.ok(merchantRepository.findByIsRejectedTrue());
+    }
+
     @GetMapping("/{mid}")
     public ResponseEntity<?> getMerchantByMid(@PathVariable String mid) {
         Merchant merchant = merchantRepository.findByMid(mid);
@@ -68,16 +112,22 @@ public class MerchantController {
         }
     }
 
-    // Get pending merchants
     @GetMapping("/pending")
     public ResponseEntity<List<Merchant>> getPendingMerchants() {
         return ResponseEntity.ok(merchantRepository.findByIsApprovedFalse());
     }
 
-    // Get approved merchants
     @GetMapping("/approved")
     public ResponseEntity<List<Merchant>> getApprovedMerchants() {
-        return ResponseEntity.ok(merchantRepository.findByIsApprovedTrue());
+        List<Merchant> all = merchantRepository.findByIsApprovedTrueAndIsRejectedFalse();
+
+        // ✅ Filter out incomplete records
+        List<Merchant> filtered = all.stream()
+                .filter(m -> m.getName() != null && m.getEmail() != null &&
+                             m.getPassword() != null && m.getDba() != null)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(filtered);
     }
 
     private String generateMid() {

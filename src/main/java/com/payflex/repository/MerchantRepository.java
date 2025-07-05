@@ -5,7 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MerchantRepository extends JpaRepository<Merchant, Long> {
+
     Merchant findByMid(String mid);
+
+    List<Merchant> findByIsRejectedTrue();
+
     List<Merchant> findByIsApprovedFalse();
-    List<Merchant> findByIsApprovedTrue();
+
+    List<Merchant> findByIsApprovedTrueAndIsRejectedFalse();
 }

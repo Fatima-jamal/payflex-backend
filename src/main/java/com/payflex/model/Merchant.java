@@ -18,19 +18,20 @@ public class Merchant {
     private String mid;
 
     private String name;
-    private String dba;
-    private String email;
-    private String proprietorCnic;
-    private String mobileNumber;
-    private String merchantCategory;
-    private String merchantType;
-    private String cnicExpiry;
-    private String city;
-    private String region;
-    private String businessAddress;
-    private String revenue;
     private String password;
+    private String dba; // ✅ Add this field
+    private String website;
+    private String phone;
+    private String email;
+    private String cnic;
+    private String address;
+    private String city;
 
     @Column(name = "is_approved")
     private boolean isApproved;
+
+    @Column(name = "is_rejected")
+    private boolean isRejected;
+
+    private String rejectionReason;
 }
