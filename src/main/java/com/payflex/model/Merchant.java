@@ -19,12 +19,18 @@ public class Merchant {
 
     private String name;
     private String password;
-    private String dba; // ✅ Add this field
+
+    @Column(name = "dba_name")
+    private String dbaName;
+
     private String website;
     private String phone;
     private String email;
     private String cnic;
+
+    @Column(name = "business_address") // ✅ Correct mapping to DB column
     private String address;
+
     private String city;
 
     @Column(name = "is_approved")
